@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="/_utils/script/sha1.js"></script>
+        <script type="text/javascript" src="/_utils/script/json2.js"></script>
+        <script type="text/javascript" src="/_utils/script/jquery.js"></script>
+        <script type="text/javascript" src="../../vendor/autoSuggest/jquery.autoSuggest.packed.js"></script>
+        <script type="text/javascript" src="/_utils/script/jquery.couch.js"></script>
+        <script type="text/javascript" src="../../vendor/couchapp/jquery.couch.app.js"></script>
+        <script type="text/javascript" src="../../vendor/couchapp/jquery.couch.app.util.js"></script>
+<!--        <script type="text/javascript" src="../../vendor/couchapp/mustache.js"></script>-->
+<!--        <script type="text/javascript" src="../../vendor/couchapp/evently.js"></script>-->
+        <link href="../../vendor/autoSuggest/autoSuggest.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript">
+            $(function(){
+                $('.searchInput').autoSuggest('http://localhost:5984/couchcall/_design/couchcall/_view/index');
+            });
+        </script>
+    </head>
+    <body>
+        <!--        <div>debug: {{contacts}}</div>-->
+        <div>
+            <input class="searchInput" type="text" maxlength="250"/>
+        </div>
+        <div>
+            <p>Couchcall entrys</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ContactName</th>
+                        <th>QuickDial</th>
+                        <th>Dial</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#contacts}}
+                    <tr>
+                        <td>{{id}}</td>
+                        <td>{{contactName}}</td>
+                        <td>{{quickDial}}</td>
+                        <td>{{dial}}</td>
+                    </tr>
+                    {{/contacts}}
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

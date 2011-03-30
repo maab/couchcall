@@ -6,9 +6,11 @@
         <script type="text/javascript" src="../vendor/couchapp/loader.js"></script>
         <script type="text/javascript">
             $.couch.app(function(app){
+                var slug = app.require('lib/slug')
                 $('#addContactForm').submit(function(){
                     var postDoc = new Object();
                     
+                    postDoc._id = slug.slugifyString($('#inputContactName').val());
                     postDoc.type = 'contact';
                     postDoc.contactName = $('#inputContactName').val();
                     postDoc.quickDial = $('#inputQuickDial').val();
@@ -16,7 +18,12 @@
                     
                     app.db.saveDoc(postDoc,{
                         success: function(response){
-                            $('#flash').text('Saved ' + response.id).fadeIn(500).fadeOut(6000);
+                            app.db.openDoc(response.id, {
+                                success: function(respDoc){
+                                    $('#flash').text('Saved ' + respDoc.contactName).fadeIn(500).fadeOut(6000);
+                                }
+                            });
+                            
                         }
                     });
                     return false;
