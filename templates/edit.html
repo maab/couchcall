@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ call.title }}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="../vendor/couchapp/loader.js"></script>
+        <script type="text/javascript">
+            $.couch.app(function(app){
+                $('#addContactForm').submit(function(){
+                    var postDoc = new Object();
+                    
+                    postDoc.type = 'contact';
+                    postDoc.contactName = $('#inputContactName').val();
+                    postDoc.quickDial = $('#inputQuickDial').val();
+                    postDoc.dial = $('#inputDial').val();
+                    
+                    app.db.saveDoc(postDoc,{
+                        success: function(response){
+                            $('#flash').text('Saved ' + response.id).fadeIn(500).fadeOut(6000);
+                        }
+                    });
+                    return false;
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div id="flash"></div>
+        <div id="content">
+            <form id="addContactForm">
+                <label for="inputContactName">Name / Bezeichnung</label>
+                <input id="inputContactName" type="text" maxlength="250" name="contactName"/>
+                <label for="inputQuickDial">Kurzwahl</label>
+                <input type="text" maxlength="8" name="quickDial" id="inputQuickDial"/>
+                <label for="inputDial">Nummer</label>
+                <input type="text" maxlength="250" name="dial" id="inputDial"/>
+                <input type="submit" value="add"/>
+            </form>
+        </div>
+    </body>
+</html>

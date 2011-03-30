@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CouchCall</title>
+        <link rel="stylesheet" href="style/main.css" type="text/css">
+        <script type="text/javascript" src="../../vendor/couchapp/loader.js"></script>
+        <script type="text/javascript">
+            $.couch.app(function(app) {
+                $("#account").evently("account", app);
+                $("#profile").evently("profile", app);
+                $.evently.connect("#account","#profile", ["loggedIn","loggedOut"]);
+                $("#items").evently("items", app);
+                
+                var addContactForm = $('#addContact');
+                
+            });
+        </script>
+    </head>
+    <body>
+        <div id="account"></div>
+
+        <h1>Generated CouchApp</h1>
+
+        <div id="profile"></div>
+        <div id="items">
+            <form id="addContact">
+                <label for="inputContactName">Name / Bezeichnung</label>
+                <input id="inputContactName" type="text" maxlength="250" name="contactName"/>
+                <label for="inputQuickDial">Kurzwahl</label>
+                <input type="text" maxlength="8" name="QuickDial" id="inputQuickDial"/>
+                <label for="inputDial">Nummer</label>
+                <input type="text" maxlength="250" name="dial" id="inputDial"/>
+                <input type="submit" value="add"/>
+            </form>
+        </div>
+
+        <div id="sidebar">
+            <p>Edit welcome message.</p>
+            <p>Ideas: You could easily turn this into a photo sharing app, or a grocery list, or a chat room.</p>
+        </div>
+    </body>
+</html>
