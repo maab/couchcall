@@ -4,45 +4,26 @@ function(head, req){
     
     var contacts = new Array();
 
+    var row, contact,contactName,dial;
+    var quickDial = ''
+    var query = req.query.query
+
     provides("json", function() {
         
-//        while(row = getRow()){
-//            contact = row.value;
-//            contacts.push({
-//                id : contact._id,
-//                contactName : contact.contactName,
-//                quickDial : contact.quickDial,
-//                dial : contact.dial
-//            });
-//        }
-        var stash = {
-            scripts : {},
-            contacts : List.withRows(function(row) {
-                var contact = row.value;
-                var key = row.key;
+        send('[');
+        while(row = getRow()){
+            contact = row.value;
+            contactName = contact.contactName;
+            if(typeof(contact.quickDial) != 'undefined'){
+                quickDial = contact.quickDial;
+            }
+            dial = contact.dial;
+            if(contactName.match(query) || quickDial.match(query) || dial.match(query)){
+                send(JSON.stringify(contact) + ',\n');
+            }
             
-                return {
-                    id : contact._id,
-                    contactName : contact.contactName,
-                    quickDial : contact.quickDial,
-                    dial : contact.dial
-                };
-            })
-//            contacts : [
-//            {
-//                id : 'contact._id',
-//                contactName : 'contact.contactName',
-//                quickDial : 'contact.quickDial',
-//                dial : 'contact.dial'
-//            },
-//            {
-//                id : 'contact._id',
-//                contactName : 'contact.contactName',
-//                quickDial : 'contact.quickDial',
-//                dial : 'contact.dial'
-//            }
-//            ]
-        };
-        return Mustache.to_html(ddoc.templates.index, stash, ddoc.templates.partials, List.send);
+        }
+        send(']')
+        send('\n');
     });
 }

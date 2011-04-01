@@ -6,6 +6,14 @@
         <script type="text/javascript" src="../vendor/couchapp/loader.js"></script>
         <script type="text/javascript">
             $.couch.app(function(app){
+                
+                $.getJSON('../_view/tags', function(data){
+                    var tags = data.rows;
+                    tags.forEach(function(tag){
+                        $('#selectTags').append('<option>' + tag.key + '</option>');
+                    });
+                });
+                
                 var slug = app.require('lib/slug')
                 $('#addContactForm').submit(function(){
                     var postDoc = new Object();
@@ -41,6 +49,10 @@
                 <input type="text" maxlength="8" name="quickDial" id="inputQuickDial"/>
                 <label for="inputDial">Nummer</label>
                 <input type="text" maxlength="250" name="dial" id="inputDial"/>
+                <label for="selectTags">Tags</label>
+                <select multiple="multiple" id="selectTags">
+<!--                    <option></option>-->
+                </select>
                 <input type="submit" value="add"/>
             </form>
         </div>

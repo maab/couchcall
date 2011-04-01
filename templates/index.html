@@ -13,9 +13,40 @@
 <!--        <script type="text/javascript" src="../../vendor/couchapp/mustache.js"></script>-->
 <!--        <script type="text/javascript" src="../../vendor/couchapp/evently.js"></script>-->
         <link href="../../vendor/autoSuggest/autoSuggest.css" type="text/css" rel="stylesheet" />
+        <link href="../../style/main.css" type="text/css" rel="stylesheet" />
         <script type="text/javascript">
             $(function(){
-                $('.searchInput').autoSuggest('http://localhost:5984/couchcall/_design/couchcall/_view/index');
+                var searchData = 'http://localhost:5984/couchcall/_design/couchcall/_list/autoSuggest/index';
+                //{"_id":"Fleischerei-Erdboden",
+                //"_rev":"1-1ab2ff2da9088af1e2e4852e7b6c363c",
+                //"type":"contact",
+                //"contactName":"Fleischerei Erdboden",
+                //"quickDial":"789",
+                //"dial":"7890790"
+                //},
+
+//                var searchData = [
+//                                    {"value":"Fleischerei Erdboden","quickDial":"789","dial":"7890790"},
+//                                    {"value":"Fleischerei Eumel","quickDial":"4232","dial":"879798432421"},
+//                                    {"value":"Fleischerei Himmel","quickDial":"098","dial":"79"},
+//                                    {"value":"Fleischerei Murks","quickDial":"7890","dial":"7890709"},
+//                                    {"value":"Fleischerei Schädlich","quickDial":"7890","dial":"879798"},
+//                                    {"value":"Fleischerei Schlechter","quickDial":"321321","dial":"2111"}
+//                                ];
+                $('.searchInput').autoSuggest(
+                    searchData,
+                    {
+                        queryParam : 'query',
+                        selectedValuesProp : '_id',
+                        selectedItemProp : 'contactName',
+                        searchObjProps : 'contactName, quickDial, dial',
+                        selectionLimit: 1,
+                        resultClick: function(data){
+//                            console.log(data.attributes._id);
+                            showContact(data.attributes._id)
+                        }
+                    }
+                );
             });
         </script>
     </head>
@@ -23,6 +54,9 @@
         <!--        <div>debug: {{contacts}}</div>-->
         <div>
             <input class="searchInput" type="text" maxlength="250"/>
+        </div>
+        <div id="contactStage">
+            {{>contactStage}}
         </div>
         <div>
             <p>Couchcall entrys</p>

@@ -1,8 +1,13 @@
 /* add styles here */
+.hidden {
+    display: none;
+}
 
 body {
-  font:1em Helvetica, sans-serif;
+  font:1em;
+  font-family: 'Avenir', 'Helvetica', 'sans-serif';
   padding:4px;
+  color: #666666;
 }
 
 h1 {

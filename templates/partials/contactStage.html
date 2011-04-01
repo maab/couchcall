@@ -1,0 +1,32 @@
+<div class="hidden contactStage">
+    <h1>Name:</h1>
+    <p id="name" class="contactField"></p>
+    <h1 class="quickDial hidden">Quick dial:</h1>
+    <p id="quickDial" class="quickDial hidden contactField"></p>
+    <h1>Number:</h1>
+    <p id="dial" class="contactField"></p>
+</div>
+
+<script type="text/javascript">
+    function showContact(docId){
+        $.couch.db('couchcall').openDoc(docId, {
+            success: function(respDoc){
+                initContactStage();
+                if(respDoc.type == 'contact'){
+                    $('p#name').text(respDoc.contactName);
+                    if(respDoc.quickDial){
+                        $('p#quickDial').text(respDoc.quickDial)
+                        $('.quickDial').removeClass('hidden');
+                    }
+                    $('p#dial').text(respDoc.dial);
+                    $('.contactStage').fadeIn(1000);
+                }
+            }
+        });
+    }
+    
+    function initContactStage(){
+        $('.contactStage.contactField').text();
+        $('.quickDial').addClass('hidden');
+    }
+</script>
