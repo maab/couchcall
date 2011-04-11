@@ -4,7 +4,7 @@ function(doc){
         var tags = doc.tags;
         for (var i in tags){
             tag = tags[i];
-            emit(tag);
+            emit(tag, 1);
         }
     }
 }

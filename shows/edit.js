@@ -1,5 +1,13 @@
-function(doc, req){
+function(data, req){
+    ddoc = this;
     var Mustache = require("vendor/couchapp/lib/mustache");
     
-    return Mustache.to_html(this.templates.edit, function(){})
+//    var data = {};
+    
+    if(data){
+        data.doc = JSON.stringify(data);
+        data.tagsStr = data.tags.join(', ');
+    }
+    
+    return Mustache.to_html(ddoc.templates.edit, data, ddoc.templates.partials)
 }

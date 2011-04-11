@@ -3,16 +3,25 @@
     <head>
         <title>{{ call.title }}</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <script type="text/javascript" src="../vendor/couchapp/loader.js"></script>
+        <script type="text/javascript" src="/couchcall/_design/couchcall/vendor/couchapp/loader.js"></script>
+        <link href="/couchcall/_design/couchcall/style/main.css" type="text/css" rel="stylesheet" />
         <script type="text/javascript">
             $.couch.app(function(app){
                 
-                $.getJSON('../_view/tags', function(data){
-                    var tags = data.rows;
-                    tags.forEach(function(tag){
-                        $('#selectTags').append('<option>' + tag.key + '</option>');
+                var doc = {{{doc}}};
+                
+                function getTags(){
+                    $.getJSON('/couchcall/_design/couchcall/_view/tags', {
+                        group : true
+                    }, function(data){
+                        var tags = data.rows;
+                        tags.forEach(function(tag){
+                            $('#selectTags').append('<option value="' + tag.key + '">' + tag.key + '</option>');
+                        });
                     });
-                });
+                }
+                
+                getTags();
                 
                 var slug = app.require('lib/slug')
                 $('#addContactForm').submit(function(){
@@ -24,8 +33,18 @@
                     postDoc.quickDial = $('#inputQuickDial').val();
                     postDoc.dial = $('#inputDial').val();
                     
+                    var tagsArr = new Array;
+                    $('#selectTags option:selected').each(function(){
+                        tagsArr.push($(this).val());
+                    });
+                    
+                    var newTagsArr = $('#inputTags').val().replace(/\s/g,'').split(',');
+                    postDoc.tags = tagsArr.concat(newTagsArr);;
+                    
+                    
                     app.db.saveDoc(postDoc,{
                         success: function(response){
+                            getTags();
                             app.db.openDoc(response.id, {
                                 success: function(respDoc){
                                     $('#flash').text('Saved ' + respDoc.contactName).fadeIn(500).fadeOut(6000);
@@ -43,17 +62,31 @@
         <div id="flash"></div>
         <div id="content">
             <form id="addContactForm">
-                <label for="inputContactName">Name / Bezeichnung</label>
-                <input id="inputContactName" type="text" maxlength="250" name="contactName"/>
+                <p>
+                    <label for="inputContactName">Name / Bezeichnung</label>
+                    <input id="inputContactName" type="text" maxlength="250" name="contactName" value="{{contactName}}"/>
+                </p>
+                <p>
                 <label for="inputQuickDial">Kurzwahl</label>
-                <input type="text" maxlength="8" name="quickDial" id="inputQuickDial"/>
+                <input type="text" maxlength="8" name="quickDial" id="inputQuickDial" value="{{quickDial}}"/>
+                </p>
+                <p>
                 <label for="inputDial">Nummer</label>
-                <input type="text" maxlength="250" name="dial" id="inputDial"/>
+                <input type="text" maxlength="250" name="dial" id="inputDial" value="{{dial}}"/>
+                </p>
+                <p>
                 <label for="selectTags">Tags</label>
-                <select multiple="multiple" id="selectTags">
-<!--                    <option></option>-->
+                <select multiple="multiple" id="selectTags" name="selectTags">
+                    <!--                    <option></option>-->
                 </select>
+                </p>
+                <p>
+                <label for="inputTags">new Tags</label>
+                <input type="text" id="inputTags" name="inputTags" value="{{tagsStr}}"/>
+                </p>
+                <p>
                 <input type="submit" value="add"/>
+                </p>
             </form>
         </div>
     </body>

@@ -4,7 +4,7 @@ function(head, req){
     
     var contacts = new Array();
 
-    var row, contact,contactName,dial;
+    var row, contact,contactName,dial,tags;
     var quickDial = ''
     var query = req.query.query
 
@@ -18,8 +18,13 @@ function(head, req){
                 quickDial = contact.quickDial;
             }
             dial = contact.dial;
-            if(contactName.match(query) || quickDial.match(query) || dial.match(query)){
-                send(JSON.stringify(contact) + ',\n');
+            
+            if(contact.tags){
+                tags = contact.tags.toString();
+            }
+
+            if(contactName.match(query) || quickDial.match(query) || dial.match(query) || tags.match(query)){
+                send(JSON.stringify(contact) + ',\n' );
             }
             
         }
